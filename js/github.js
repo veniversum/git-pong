@@ -8,11 +8,11 @@ var root;
 var treeData = [];
 
 function checkQuery() {
-  var owner = fromQuery('owner');
   var repo = fromQuery('repo');
-  if (owner && repo) {
-    $('input#owner').val(owner);
+
+  if (repo) {
     $('input#repo').val(repo);
+
     getRepo();
   }
 }
@@ -29,9 +29,15 @@ function fromQuery(value) {
 }
 
 function getRepo() {
-  var owner = $('input#owner').val(),
-      repo = $('input#repo').val(),
-      queryString = 'owner=' + owner + '&repo=' + repo;
+  var owner, repo;
+
+  (function(arr) {
+    owner = arr[0];
+    repo  = arr[1];
+  })($('input#repo').val().split("/"));
+
+  var queryString = 'repo=' + owner + '/' + repo;
+
   window.history.pushState({}, '', window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + queryString);
 
   $.ajax({
